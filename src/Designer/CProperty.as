@@ -6,22 +6,28 @@ package Designer
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	
+	import Goo.CTextField;
 	import Goo.CWidget;
 	import Goo.GUI;
 	
 	public class CProperty extends CWidget
 	{
-		private var NameBox:TextField = new TextField( );
-		private var ValueBox:TextField = new TextField( ) ;
+		private var NameBox:CTextField = null;
+		private var ValueBox:CTextField = null ;
 		private var TargetWidget:CWidget = null;
 		
 		public function CProperty(ParentWidget:Sprite, sName:String, TargetR:Rectangle=null)
 		{
+			NameBox = new CTextField( this, "NameBox" );
+			ValueBox = new CTextField( this, "ValueBox" );
+			
 			super(ParentWidget, sName, TargetR);
+						
 			NameBox.width = 64;
 			NameBox.height = GUI.SizeListItemHeight;
 			NameBox.selectable = false;
-			ValueBox.width = (width - NameBox.width) - 20;
+			
+			ValueBox.width = ParentWidget.width - NameBox.width;
 			ValueBox.height = GUI.SizeListItemHeight;
 			addChild( NameBox );
 			addChild( ValueBox );
@@ -36,6 +42,8 @@ package Designer
 			//graphics.beginFill(GUI.ColorWindow) ;
 			//graphics.drawRect(0,0, Bounds.width, Bounds.height );
 			//graphics.endFill();
+			NameBox.width = 64;
+			ValueBox.width = parent.width - NameBox.width;
 		}
 		
 		protected function onChange(event:Event):void

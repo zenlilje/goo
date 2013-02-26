@@ -23,6 +23,7 @@ package Designer
 			Debug = new CTextField( this, "Debug" );
 			super(ParentWidget, sName);
 				
+			this.Panel.LayoutStyle = GUI.LayoutVertical;
 			//addChild( Debug );
 			Debug.width = width;
 			Debug.height = 200;
@@ -47,6 +48,7 @@ package Designer
 			// List the class name.
 			var classInfo:XML = describeType(TargetWidget);
 			Debug.text = "Class " + classInfo.@name.toString() + "\n";
+			addChild( Debug );
 			
 			// List the object's variables, their values, and their types.
 			/*

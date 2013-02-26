@@ -14,15 +14,39 @@ package Goo
 	
 	public class CPanel extends CWidget
 	{			
-		public var LayoutStyle:int = GUI.LayoutHorizontal;
+		private var _LayoutStyle:int = GUI.LayoutHorizontal;
 		
 		public function CPanel(ParentWidget:Sprite, sName:String)
 		{
 			super(ParentWidget, sName);
 		}
 		
+		
+		
 		//todo smarter heights
+
+		public function get LayoutStyle():int
+		{
+			return _LayoutStyle;
+		}
+
+		public function set LayoutStyle(value:int):void
+		{
+			_LayoutStyle = value;
+			Layout( );
+		}
+
 		public override function Layout( ) : void
+		{
+			if ( _LayoutStyle == GUI.LayoutHorizontal ) 
+				LayoutHorizontalFlow( );
+			else if ( _LayoutStyle == GUI.LayoutVertical ) 
+			{
+				LayoutVertical( );
+			}
+		}
+		
+		private function LayoutHorizontalFlow( ) : void
 		{
 			var xx:int = 2;
 			var yy:int = 2;
@@ -44,6 +68,22 @@ package Goo
 				}
 			}
 		}
+		private function LayoutVertical( ) : void
+		{
+			var xx:int = 2;
+			var yy:int = 2;
+			for ( var i:uint = 0; i< numChildren; i++ )
+			{
+				if ( !(getChildAt( i ) is CWidget)) continue;
+				var w:CWidget = getChildAt( i )  as CWidget;
+				if ( w == null ) continue;
+				w.x = xx;
+				w.y = yy;
+				
+				yy += w.height;
+			}
+		}
+		
 		
 		public override function Create( ) : void
 		{	

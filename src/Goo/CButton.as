@@ -5,6 +5,7 @@ package Goo
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormatAlign;
 
 	//import flash.text.TextField;
@@ -58,15 +59,18 @@ package Goo
 			
 			if ( Text == null ) Text = new CTextField( this, "TextField" );
 			Text.Serialise = false;
-			addChild( Text );			
+			addChild( Text );
 			
-			Text.width = Bounds.width-GUI.SizeButtonPad*2;
-			Text.height = Bounds.height-GUI.SizeButtonPad*2;
-			Text.text = _Label ;			
-			Text.x = GUI.SizeButtonPad;
-			Text.y = GUI.SizeButtonPad;
+			Text.height = 1;
+			//Text.autoSize = TextFieldAutoSize.CENTER;
 			Text.align = TextFormatAlign.CENTER ;
-			Text.CenterVertically();
+			Text.text = _Label ;
+			Text.width = Bounds.width;
+			Text.height = GUI.SizeButtonHeight;
+			//Text.y = GUI.SizeButtonPad;			
+			Text.y = (Bounds.height - Text.height)/2;
+			
+			Text.x = (Bounds.width - Text.width) /2;
 			
 			buttonMode = true;
 		}

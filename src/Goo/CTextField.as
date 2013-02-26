@@ -2,6 +2,7 @@ package Goo
 {
 	import flash.display.Sprite;
 	import flash.text.TextField;
+	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	
@@ -13,6 +14,8 @@ package Goo
 	{
 		
 		private var Text:TextField = new TextField();
+		private var _TextAlign:String = TextFormatAlign.LEFT;
+		private var _type:String = TextFieldType.DYNAMIC;
 		
 		
 		public function CTextField( ParentWidget:Sprite, sName:String)
@@ -20,6 +23,28 @@ package Goo
 			super(ParentWidget, sName);
 		}
 		
+		public function get type():String
+		{
+			return _type;
+		}
+
+		public function set type(value:String):void
+		{
+			_type = value;
+			Create( );
+		}
+
+		public function get TextAlign():String
+		{
+			return _TextAlign;
+		}
+
+		public function set TextAlign(value:String):void
+		{
+			_TextAlign = value;
+			Create( );
+		}
+
 		public override function Create( ) : void
 		{
 			super.Create( );
@@ -27,25 +52,41 @@ package Goo
 			
 			var tf:TextFormat = Text.defaultTextFormat;
 			tf.font = "Arial";
-			tf.align = TextFormatAlign.CENTER; //TextAlign for Air 3.1
+			tf.align = _TextAlign; //TextAlign for Air 3.1
 			//Text.border = true;
 			//Text.borderColor = 0xff0000;
 			Text.defaultTextFormat = tf;
+			//Text.background = true;
+			//Text.backgroundColor = 0xff0000 ;
+			//Text.border = true;
+			//Text.borderColor = 0x000000;
 			Text.text = name;
-			Text.selectable = false;
-			Text.mouseEnabled = false;
+			Text.type = _type;
+			
+			if ( _type ==TextFieldType.INPUT )
+			{
+				Text.selectable = true;	
+				Text.mouseEnabled = true;
+			}
+			else
+			{
+				Text.selectable = false;
+				Text.mouseEnabled = false;
+			}
+			
+			
 			addChild( Text );
 			this.mouseEnabled = false;
-		}
-		
-		public function CenterVertically(): void 
-		{
-			y = Math.round((parent.height - Text.textHeight) / 2) - GUI.SizeButtonPad;
 		}
 		
 		public function get defaultTextFormat() : TextFormat
 		{
 			return Text.defaultTextFormat;
+		}
+		
+		public function get text( ) : String
+		{
+			return Text.text;
 		}
 		
 		public function set text( s:String ) : void
