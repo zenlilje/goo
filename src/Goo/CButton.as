@@ -61,21 +61,16 @@ package Goo
 			Text.Serialise = false;
 			addChild( Text );
 			
-			Text.height = 1;
-			//Text.autoSize = TextFieldAutoSize.CENTER;
+			Text.height = 1;			
 			Text.align = TextFormatAlign.CENTER ;
 			Text.text = _Label ;
 			Text.width = Bounds.width;
-			Text.height = GUI.SizeButtonHeight;
-			//Text.y = GUI.SizeButtonPad;			
+			Text.height = GUI.SizeButtonHeight;			
+			Text.x = 0;
 			Text.y = (Bounds.height - Text.height)/2;
-			
-			Text.x = (Bounds.width - Text.width) /2;
 			
 			buttonMode = true;
 		}
-		
-		
 		
 		public override function SetupEvents( ) : void
 		{

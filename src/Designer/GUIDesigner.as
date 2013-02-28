@@ -104,7 +104,7 @@ package Designer
 			Properties.Resize( 200, 500 );
 			Properties.x = stage.width-Properties.width - 10;
 			Properties.y = GUI.SizeMenuItemHeight+4;
-			
+			Properties.AddCallback( PropertyCallback );
 			
 			//btn2.y = 48;
 			
@@ -117,8 +117,15 @@ package Designer
 			
 			SetupRoot( );
 			
+			//test
 			//GUI.LoadXML( "test.xml", win );
 			//GUI.SaveXML( "test.xml" , win );
+		}
+		
+		private function PropertyCallback( widget:CWidget, e:Event ):void
+		{
+			//refresh the handle
+			if ( DesignHandle != null ) DesignHandle.SetTarget( DesignHandle.TargetWidget );			
 		}
 		
 		protected function SetupRoot( ) : void
@@ -177,12 +184,13 @@ package Designer
 					{
 						var sm:CMenuItem = ParentWidget as CMenuItem ;
 						sm.DesignMode = true;
-						sm.AddSubMenuItem( "Unnamed Menu", DesignerCallback );
+						sm.AddSubMenuItem( "SubItem", DesignerCallback );
 						sm.ShowSubItems(true );
+						sm.AddCallback( DesignerCallback );
 					}
 					else
 					{
-						var mi:CMenuItem = new CMenuItem( ParentWidget, "Unnamed Menu" );
+						var mi:CMenuItem = new CMenuItem( ParentWidget, "Menu" );
 						mi.DesignMode = true;
 						mi.AddCallback( DesignerCallback );
 						mi.x = 0;
@@ -192,12 +200,10 @@ package Designer
 				case "Dump XML":
 					var s:XML = GUI.ParseToXML( RootWidget, null );
 					trace( s.toXMLString() );
-				break;
-				
+				break;				
 			}
 			
-			ParentWidget.Layout();
-			
+			ParentWidget.Layout();			
 		}
 		
 		public function RootCallback( Widget:CWidget, e:Event ) : void
@@ -237,7 +243,7 @@ package Designer
 		
 		public function OnSaveXML( Widget:CWidget, e:Event ) : void
 		{
-			trace( "Save XML:" );
+			//trace( "Save XML:" );
 			var xml:XML = <xml/>;
 			var s:String = GUI.ParseToXML( RootWidget , xml ).toXMLString();
 			//var f:File = File.documentsDirectory;

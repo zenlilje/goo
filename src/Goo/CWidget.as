@@ -11,18 +11,25 @@ package Goo
 	public class CWidget extends Sprite
 	{		
 		protected var Callback:Function;
+		
+		//when true this widget is being designed/altered by an external designer and has special handling
 		protected var _DesignMode:Boolean = false;
+		
 		protected var _Serialise:Boolean = true; //when false this widget won't be written out
 		//we have our own bounds because our sizes are set before redrawing
 		//(flash calculates bounds after drawing)
-		public var Bounds:Rectangle = new Rectangle(0,0, 64, 24 );		
+		public var Bounds:Rectangle = null;	
 		public var LayoutOffset:Point = new Point( 0,0 );
 		
 		public var PublicProperties:Array = new Array( );
 		
 		public function CWidget( ParentWidget:Sprite, sName:String, TargetR:Rectangle = null )
 		{			
-			PublicProperties.push( "Bounds" );
+			if ( Bounds == null ) Bounds = new Rectangle(0,0, 8,24 );
+			PublicProperties.push( "x" );
+			PublicProperties.push( "y" );
+			PublicProperties.push( "width" );
+			PublicProperties.push( "height" );
 			
 			name = sName;
 			if ( TargetR != null ) Bounds = TargetR;
@@ -88,6 +95,12 @@ package Goo
 			
 		}		
 		
+		/**
+		 * Converts this Widget to XML
+		 * (non-recursive) 
+		 * @return 
+		 * 
+		 */		
 		public function ToXML( ) : XML
 		{
 			var xml:XML = <widget />;
@@ -122,18 +135,29 @@ package Goo
 			}
 		}
 		
-		public function GetWidth( ) : int
+		/*public function GetWidth( ) : int
 		{
 			return width;
+		}*/
+		
+		override public function get width() : Number 
+		{
+			return Bounds.width;
 		}
 		
+		override public function set width( n:Number ) : void
+		{		  
+		  Resize( n, Bounds.height );
+		}
+		
+		/**
+		 * Layout the widget (if available) 
+		 * 
+		 */		
 		public function Layout( ) : void
 		{
 			
 		}
-		
-		
-		
 		
 		
 	}

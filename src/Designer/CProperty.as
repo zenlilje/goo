@@ -53,9 +53,12 @@ package Designer
 				if ( TargetWidget.hasOwnProperty(NameBox.text) == true )
 				{
 					if( TargetWidget[NameBox.text] is String ) TargetWidget[NameBox.text] = ValueBox.text;
+					if( TargetWidget[NameBox.text] is int) TargetWidget[NameBox.text] = int(ValueBox.text);
+					if( TargetWidget[NameBox.text] is Number) TargetWidget[NameBox.text] = Number(ValueBox.text);
 					TargetWidget.Create();
 				}
 			}
+			if ( Callback != null ) Callback( this, event );
 		}
 		
 		public function SetProperty( sLabel:String, Item:CWidget ): void

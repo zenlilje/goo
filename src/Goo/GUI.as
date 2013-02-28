@@ -30,7 +30,7 @@ package Goo
 		public static const ColorMenuOverBG:int = 0x888888;
 		
 		//sizes
-		public static const SizeButtonWidth:int = 128;
+		public static const SizeButtonWidth:int = 64;
 		public static const SizeButtonHeight:int = 24;
 		public static const SizeButtonPad:int = 2;
 		
@@ -59,7 +59,12 @@ package Goo
 		{
 		}
 		
-		
+		/**
+		 * Loads Goo XML from a string into the target container 
+		 * @param s
+		 * @param TargetWidget
+		 * 
+		 */		
 		public static function LoadXMLFromString( s:String, TargetWidget:Sprite ) : void
 		{
 			var xml:XML = new XML( s );
@@ -71,6 +76,13 @@ package Goo
 			ParseFromXML( TargetWidget, xml.widget );
 		}
 		
+		/**
+		 * Recursively Parses an XMLList and constructs widgets
+		 * Called by LoadXMLFromString  
+		 * @param Widget
+		 * @param node
+		 * 
+		 */		
 		public static function ParseFromXML( Widget:Sprite, node:XMLList ) : void
 		{			
 			//var Widgets:XMLList = node.Widget;
@@ -86,13 +98,20 @@ package Goo
 			}
 		}
 		
-		//Factory constructor
-		//todo auto detect from createClass
+		/**
+		 * Consructs a single widget from an xml node 
+		 * @param Parent
+		 * @param node
+		 * @return the constructed widget , or null if the xml was unknown
+		 * 
+		 */		
 		public static function ConstructWidget(  Parent:Sprite, node:XML ) : CWidget
 		{
+			//quick indent
 			var s:String = "";
 			for ( var i:int = 0; i< Indent; i++ ) s+="-"; 
 			trace( s + node.widgettype );
+			
 			var w:CWidget = null;
 			var sName:String = node.name;
 			switch ( node.widgettype.toString() )
@@ -122,12 +141,19 @@ package Goo
 			//common items
 			w.x = node.x;
 			w.y = node.y;
+			w.Resize( node.width, node.height );
 			//w.width = node.width;
 			//w.height = node.height;
 			
 			return w;
 		}
 		
+		/**
+		 * Loads an XML file into a widget 
+		 * @param sFile
+		 * @param TargetWidget
+		 * 
+		 */		
 		public static function LoadXML( sFile:String, TargetWidget:Sprite ) : void
 		{
 			var load:Loader = new Loader( );
@@ -142,7 +168,13 @@ package Goo
 			LoadInfo.content.parent;
 		}
 		
-		//recursively parse a widget to xml
+		/**
+		 * Recursively parses a widget into xml 
+		 * @param Widget
+		 * @param node
+		 * @return the combined xml
+		 * 
+		 */		
 		public static function ParseToXML( Widget:CWidget, node:XML ) : XML
 		{
 			var s:String = "";
@@ -164,7 +196,13 @@ package Goo
 			return node;
 		}
 		
-		//AIR only
+		/**
+		 * Saves a widget to a file (including child widgets)
+		 * AIR only 
+		 * @param sFile
+		 * @param SourceWidget
+		 * 
+		 */		
 		public static function SaveXML( sFile:String, SourceWidget:CWidget) : void
 		{	
 			var f:File = File.documentsDirectory;
@@ -181,6 +219,15 @@ package Goo
 			fs.close( );
 		}
 		
+		/**
+		 * Draws a gradient into a widgets 
+		 * @param TargetWidget
+		 * @param TargetRect
+		 * @param c1 First colour
+		 * @param c2 Second colour
+		 * @param angle
+		 * 
+		 */		
 		public static function DrawGradient( TargetWidget:CWidget, TargetRect:Rectangle, c1:uint, c2:uint, angle=0 ) : void
 		{
 			//graphics.beginFill( GUI.ColorWindow );

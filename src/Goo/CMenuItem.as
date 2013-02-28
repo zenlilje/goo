@@ -4,14 +4,15 @@ package Goo
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
 	public class CMenuItem extends CWidget
 	{
-		public var Caption:String = "Menu Item";
+		public var Label:String = "MenuItem";
 		
-		public var Text:CTextField =  null;
+		public var Text:CTextField =  null;		
 		public var Normal:MovieClip = new MovieClip();
 		public var Over:MovieClip = new MovieClip;
 		
@@ -21,9 +22,9 @@ package Goo
 		
 		public function CMenuItem(ParentWidget:Sprite, sName:String)
 		{
-			Caption = sName;
+			Label = sName;			
 			super(ParentWidget, sName);			
-			PublicProperties.push( "Caption" );
+			PublicProperties.push( "Label" );
 		}
 		
 		public override function Create( ) : void
@@ -34,21 +35,22 @@ package Goo
 			Text.Serialise = false;
 				
 			Text.width = 1;
-			Text.autoSize = TextFieldAutoSize.LEFT;
-			//Text.width = GUI.SizeMenuItemWidth;
-			//Text.height = GUI.SizeMenuItemHeight;
-			Text.text = Caption ;
+			Text.autoSize = TextFieldAutoSize.LEFT;			
+			Text.text = Label ;
+			if ( Text.width > Bounds.width )
+				Bounds.width = Text.width;
 			Text.selectable = false;
 			Text.mouseEnabled = false;
 			Text.x +=2;
 			
 			Normal.graphics.clear( );
+			Over.graphics.clear();
 			if ( parent is CMenuItem )
 			{			
 				Normal.graphics.beginFill( GUI.ColorMenuBG, 1 );
-				Normal.graphics.drawRect(0,0, GUI.SizeMenuItemMax, GUI.SizeMenuItemHeight );
+				Normal.graphics.drawRect(0,0, Bounds.width, GUI.SizeMenuItemHeight );
 				Over.graphics.beginFill( GUI.ColorMenuOverBG );
-				Over.graphics.drawRect(0,0, GUI.SizeMenuItemMax, GUI.SizeMenuItemHeight );
+				Over.graphics.drawRect(0,0, Bounds.width, GUI.SizeMenuItemHeight );
 				Over.graphics.endFill()
 			}
 			else
@@ -85,7 +87,7 @@ package Goo
 				Callback(this, event);
 			}
 			
-			if ( DesignMode == true ) return;
+			if (( DesignMode == true ) && (event.ctrlKey == false )) return;
 			
 			if ( parent is CPanel )
 			{
@@ -126,12 +128,46 @@ package Goo
 		{
 			var m:CMenuItem = new CMenuItem( this, sName );
 			m.AddCallback( Callback );
+			if ( DesignMode == true ) m.DesignMode = true;
 			addChild( m );
 			SubItems.push( m );
 			m.y = GUI.SizeMenuItemHeight * SubItems.length;
 			m.visible = false;
+			Layout( );
 			return m;
 		}
+		
+		public override function Resize( twidth:int, theight:int) : void
+		{
+			Bounds = new Rectangle( x, y, twidth, theight);
+			Create( );
+			//Layout( );
+			if ( parent is CWidget ) 
+			{
+				var w:CWidget = parent as CWidget;
+				//w.Layout( );
+			}
+		}
+		
+		public override function Layout( ) : void
+		{
+			super.Layout();
+			
+			//calulcate widest items
+			var Widest:int = 0;
+			for ( var i:uint=0; i< SubItems.length; i++ )
+			{
+				var m:CMenuItem = SubItems[i];
+				if ( m.width  > Widest ) Widest = m.width;
+			}
+			for ( var i2:uint=0; i2< SubItems.length; i2++ )
+			{
+				var m2:CMenuItem = SubItems[i2];
+				m2.Resize( Widest, GUI.SizeMenuItemHeight );
+			}
+		}
+		
+		
 		public function ShowSubItems( b:Boolean ) : void
 		{
 			Open = b;
@@ -147,14 +183,6 @@ package Goo
 			if ( SubItems == null ) return super.getChildAt(n );
 			else
 				return SubItems[n];
-		}
-		
-		//we should not return the width of sub items (hiddent) rather of this item only
-		public override function GetWidth( ) : int
-		{
-			if ( Text != null )
-				return Text.width;
-			else return width;
 		}
 	}
 }

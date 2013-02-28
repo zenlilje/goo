@@ -1,6 +1,7 @@
 package Designer
 {
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
@@ -102,9 +103,15 @@ package Designer
 		{
 			var p:CProperty = new CProperty( this, Label, new Rectangle( 0,0, width, GUI.SizeListItemHeight ));
 			p.SetProperty( Label, TargetWidget );
+			p.AddCallback( PropertyCallback );
 			addChild( p );
 			Properties.push( p );
 			//w.text = 
+		}
+		
+		public function PropertyCallback( w:CWidget, e:Event ) : void
+		{
+			if ( Callback != null ) Callback( w, e );
 		}
 	}
 }

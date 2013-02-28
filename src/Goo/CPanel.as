@@ -8,9 +8,7 @@ package Goo
 	 */
 	
 	import flash.display.DisplayObject;
-	import flash.display.GradientType;
 	import flash.display.Sprite;
-	import flash.geom.Matrix;
 	
 	public class CPanel extends CWidget
 	{			
@@ -58,7 +56,7 @@ package Goo
 				w.x = xx;
 				w.y = yy;
 				
-				xx+=w.GetWidth() + 2;
+				xx+=w.width + 2;
 				
 				
 				if ( xx >= width-w.width ) 
@@ -83,13 +81,11 @@ package Goo
 				yy += w.height;
 			}
 		}
-		
-		
+				
 		public override function Create( ) : void
 		{	
-			graphics.clear( );
+			graphics.clear( );			
 			
-			//graphics.beginFill( GUI.ColorWindow );
 			GUI.DrawGradient( this, Bounds, GUI.ColorWindow, GUI.ColorWindow2, 90 );
 			
 			graphics.lineStyle(1, GUI.ColorWindowShadow );

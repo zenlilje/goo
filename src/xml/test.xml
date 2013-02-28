@@ -1,4 +1,81 @@
 <xml>
-<widget type="CPanel" x="0" y="0" name="MyPanel">
-</widget>
+  <widget>
+    <widgettype>Goo::CWidget</widgettype>
+    <name>Root</name>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>800</height>
+    <Bounds>(x=0, y=0, w=800, h=800)</Bounds>
+    <widget>
+      <widgettype>Goo::CWindow</widgettype>
+      <name>Unnamed Window</name>
+      <x>32</x>
+      <y>127</y>
+      <width>323</width>
+      <height>267</height>
+      <Bounds>(x=0, y=0, w=320, h=264)</Bounds>
+      <Caption>Window</Caption>
+      <widget>
+        <widgettype>Goo::CButton</widgettype>
+        <name>Unnamed</name>
+        <x>2</x>
+        <y>2</y>
+        <width>64</width>
+        <height>24</height>
+        <Bounds>(x=0, y=0, w=64, h=24)</Bounds>
+        <Label>b1</Label>
+      </widget>
+      <widget>
+        <widgettype>Goo::CButton</widgettype>
+        <name>Unnamed</name>
+        <x>68</x>
+        <y>2</y>
+        <width>64</width>
+        <height>24</height>
+        <Bounds>(x=0, y=0, w=64, h=24)</Bounds>
+        <Label>b2</Label>
+      </widget>
+      <widget>
+        <widgettype>Goo::CButton</widgettype>
+        <name>Unnamed</name>
+        <x>134</x>
+        <y>2</y>
+        <width>64</width>
+        <height>24</height>
+        <Bounds>(x=0, y=0, w=64, h=24)</Bounds>
+        <Label>b3</Label>
+      </widget>
+      <widget>
+        <widgettype>Goo::CMenuItem</widgettype>
+        <name>Unnamed Menu</name>
+        <x>200</x>
+        <y>2</y>
+        <width>94</width>
+        <height>48</height>
+        <Bounds>(x=0, y=0, w=64, h=24)</Bounds>
+        <Caption>m1 Menu</Caption>
+        <widget>
+          <widgettype>Goo::CMenuItem</widgettype>
+          <name>Unnamed Menu</name>
+          <x>0</x>
+          <y>24</y>
+          <width>94</width>
+          <height>24</height>
+          <Bounds>(x=0, y=0, w=64, h=24)</Bounds>
+          <Caption>Unnamed Menu</Caption>
+        </widget>
+      </widget>
+    </widget>
+    <widget>
+      <widgettype>Goo::CButton</widgettype>
+      <name>Unnamed</name>
+      <x>28</x>
+      <y>36</y>
+      <width>113</width>
+      <height>58</height>
+      <Bounds>(x=0, y=30, w=113, h=58)</Bounds>
+      <Label>Do Something</Label>
+    </widget>
+  </widget>
 </xml>

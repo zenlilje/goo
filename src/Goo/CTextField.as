@@ -57,7 +57,7 @@ package Goo
 			//Text.borderColor = 0xff0000;
 			Text.defaultTextFormat = tf;
 			//Text.background = true;
-			//Text.backgroundColor = 0xff0000 ;
+			//Text.backgroundColor = 0x55ff0000 ;
 			//Text.border = true;
 			//Text.borderColor = 0x000000;
 			Text.text = name;
@@ -92,14 +92,17 @@ package Goo
 		public function set text( s:String ) : void
 		{
 			Text.text = s;
+			Bounds.width = Text.width;
 		}
 		public override function set width( n:Number ) : void
 		{
 			Text.width= n;
+			Bounds.width = Text.textWidth;
 		}
 		public override function set height( n:Number ) : void
 		{
 			Text.height= n;
+			Bounds.height = Text.height;
 		}
 		
 		public function set autoSize( s:String ) : void
