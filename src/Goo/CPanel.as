@@ -9,6 +9,7 @@ package Goo
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.geom.Rectangle;
 	
 	public class CPanel extends CWidget
 	{			
@@ -16,6 +17,7 @@ package Goo
 		
 		public function CPanel(ParentWidget:Sprite, sName:String)
 		{
+			Bounds = new Rectangle( 0,0, GUI.SizeWindowWidth, GUI.SizeWindowHeight );
 			super(ParentWidget, sName);
 		}
 		
@@ -86,7 +88,7 @@ package Goo
 		{	
 			graphics.clear( );			
 			
-			GUI.DrawGradient( this, Bounds, GUI.ColorWindow, GUI.ColorWindow2, 90 );
+			GUI.DrawGradient( this, new Rectangle (0,0, Bounds.width, Bounds.height), GUI.ColorWindow, GUI.ColorWindow2, 90 );
 			
 			graphics.lineStyle(1, GUI.ColorWindowShadow );
 			graphics.moveTo(0, Bounds.height );

@@ -41,7 +41,7 @@ package Goo
 				Bounds.width = Text.width;
 			Text.selectable = false;
 			Text.mouseEnabled = false;
-			Text.x +=2;
+			//Text.x =GUI.SizeButtonPad;
 			
 			Normal.graphics.clear( );
 			Over.graphics.clear();

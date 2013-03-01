@@ -27,12 +27,12 @@ package Designer
 			NameBox.height = GUI.SizeListItemHeight;
 			NameBox.selectable = false;
 			
-			ValueBox.width = ParentWidget.width - NameBox.width;
-			ValueBox.height = GUI.SizeListItemHeight;
+			ValueBox.Resize( ParentWidget.width - NameBox.width, GUI.SizeListItemHeight );
 			addChild( NameBox );
 			addChild( ValueBox );
 			ValueBox.x = NameBox.width;			
 			ValueBox.type = TextFieldType.INPUT;
+			ValueBox.background = true;
 			ValueBox.addEventListener( Event.CHANGE, onChange );
 		}
 		
@@ -41,6 +41,9 @@ package Designer
 			graphics.clear( );
 			//graphics.beginFill(GUI.ColorWindow) ;
 			//graphics.drawRect(0,0, Bounds.width, Bounds.height );
+			graphics.lineStyle(1, GUI.ColorBorder );
+			graphics.moveTo( 5, GUI.SizeListItemHeight );
+			graphics.lineTo( width, GUI.SizeListItemHeight );
 			//graphics.endFill();
 			NameBox.width = 64;
 			ValueBox.width = parent.width - NameBox.width;

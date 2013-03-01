@@ -125,7 +125,10 @@ package Goo
 		
 		public function Resize( twidth:int, theight:int) : void
 		{
-			Bounds = new Rectangle( x, y, twidth, theight);
+			Bounds.x = x;
+			Bounds.y = y;
+			Bounds.width = twidth;
+			Bounds.height = theight;
 			Create( );
 			Layout( );
 			if ( parent is CWidget ) 

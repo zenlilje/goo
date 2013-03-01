@@ -33,6 +33,17 @@ package Goo
 			_type = value;
 			Create( );
 		}
+		
+		public function set background( b:Boolean ) : void
+		{
+			Text.background = b;
+		}
+		
+		public function set border( b:Boolean ) : void
+		{
+			Text.border = b;
+			Text.borderColor = GUI.ColorBorder;
+		}
 
 		public function get TextAlign():String
 		{
@@ -52,16 +63,13 @@ package Goo
 			
 			var tf:TextFormat = Text.defaultTextFormat;
 			tf.font = "Arial";
-			tf.align = _TextAlign; //TextAlign for Air 3.1
-			//Text.border = true;
-			//Text.borderColor = 0xff0000;
+			tf.align = _TextAlign; //TextAlign for Air 3.1			
 			Text.defaultTextFormat = tf;
-			//Text.background = true;
-			//Text.backgroundColor = 0x55ff0000 ;
-			//Text.border = true;
-			//Text.borderColor = 0x000000;
+			Text.width = Bounds.width;
+			Text.height = Bounds.height;
 			Text.text = name;
 			Text.type = _type;
+			
 			
 			if ( _type ==TextFieldType.INPUT )
 			{
@@ -72,8 +80,7 @@ package Goo
 			{
 				Text.selectable = false;
 				Text.mouseEnabled = false;
-			}
-			
+			}			
 			
 			addChild( Text );
 			this.mouseEnabled = false;

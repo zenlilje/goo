@@ -63,8 +63,8 @@ package Goo
 			//GUI.DrawGradient( Panel, TargetRect, GUI.ColorWindow, GUI.ColorWindow2, 90 );
 			
 			//border
-			graphics.lineStyle( 2, GUI.ColorBorder );
-			graphics.drawRect( 0,0, Bounds.width+1, Bounds.height +1 );
+			graphics.lineStyle( 1, GUI.ColorBorder );
+			graphics.drawRect( 0,0, Bounds.width, Bounds.height );
 		}
 		
 		public override function SetupEvents( ) : void
@@ -72,6 +72,13 @@ package Goo
 			super.SetupEvents();
 			addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+		}
+		
+		public override function Dispose( ) : void
+		{
+			super.Dispose();
+			removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 		}
 		protected function onMouseDown(event:MouseEvent):void
 		{
