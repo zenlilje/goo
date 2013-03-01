@@ -5,7 +5,6 @@ package Goo
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	
 	public class CMenuItem extends CWidget
@@ -80,12 +79,13 @@ package Goo
 		protected override function onClick(event:MouseEvent):void
 		{
 			//if ( event.currentTarget != this ) return;
-			event.stopImmediatePropagation();
-			
 			if ( Callback != null ) 
 			{			
 				Callback(this, event);
 			}
+		/*	event.stopImmediatePropagation();
+			
+			
 			
 			if (( DesignMode == true ) && (event.ctrlKey == false )) return;
 			
@@ -99,8 +99,9 @@ package Goo
 			{
 				var p:CMenuItem = parent as CMenuItem;
 				p.ShowSubItems( false )
-			}
-			else if ( Open )
+			}*/
+			
+			if ( Open )
 			{
 				ShowSubItems( false );	
 			}
@@ -166,8 +167,7 @@ package Goo
 				m2.Resize( Widest, GUI.SizeMenuItemHeight );
 			}
 		}
-		
-		
+				
 		public function ShowSubItems( b:Boolean ) : void
 		{
 			Open = b;

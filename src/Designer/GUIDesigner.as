@@ -186,7 +186,7 @@ package Designer
 						var xml:XML = <xml/>;
 						var cdata:String = GUI.ParseToXML(SelectedWidget, xml);
 						//cdata = "<xml>" + cdata + "</xml>";
-						trace( cdata );
+						//trace( cdata );
 						Clipboard.generalClipboard.setData( ClipboardFormats.HTML_FORMAT, cdata, true);
 					}
 				break;
@@ -195,7 +195,7 @@ package Designer
 					var data:String = Clipboard.generalClipboard.getData( ClipboardFormats.HTML_FORMAT ) as String;					
 					GUI.LoadXMLFromString( data, ParentWidget );
 					SetupCallbacks( ParentWidget );
-					trace( data );
+					//trace( data );
 				}
 				break;
 				case "Insert Panel" :
