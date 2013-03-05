@@ -10,6 +10,9 @@ package Goo
 	
 	public class CWidget extends Sprite
 	{		
+		
+		public var Type:String = "CWidget";
+		
 		protected var Callback:Function;
 		
 		//when true this widget is being designed/altered by an external designer and has special handling
@@ -160,6 +163,11 @@ package Goo
 		public function Layout( ) : void
 		{
 			
+		}
+		
+		public function get ParentWidget( ) : CWidget
+		{
+			return parent as CWidget;
 		}
 		
 		

@@ -1,4 +1,4 @@
-package Designer
+﻿package Designer
 {
 	
 	/**
@@ -12,6 +12,7 @@ package Designer
 		
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
+	import flash.display.MovieClip;		
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -19,15 +20,18 @@ package Designer
 	import flash.events.MouseEvent;
 	import flash.net.FileFilter;
 	import flash.net.FileReference;
+	import flash.text.TextField;
+	import flash.text.TextFieldType;
 	
 	import Goo.CButton;
 	import Goo.CMenuItem;
 	import Goo.CPanel;
+	import Goo.CStatusBar;
 	import Goo.CWidget;
 	import Goo.CWindow;
 	import Goo.GUI;
 	
-	[frameRate="40"]
+	
 	public class GUIDesigner extends Sprite
 	{		
 		private var WidgetToCreate:CWidget = null;
@@ -37,24 +41,26 @@ package Designer
 		private var MenuPanel:CPanel = null;
 		private var RootClicked:Boolean = false;
 		private var SelectedWidget:CWidget = null;
-		private var DesignHandle:CDesignerHandles2 = null;
+		private var DesignHandle:CDesignerHandles = null;
 		private var Properties:CPropertiesInspector = null;
 		
 		private const STATE_MOVE:String = "STATE_MOVE";
 		private const STATE_SCALE:String = "STATE_SCALE"; 
 		private var State:String = STATE_MOVE;
 		
+		private var WidgetCount:int = 0;
 		
 		
 		public function GUIDesigner()
 		{
-			stage.nativeWindow.width = 800;
-			stage.nativeWindow.height= 800;
+			trace( "GUIDesigner" );
+			CWindowTools.SetupWindow( stage );
+			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
 			MenuPanel = new CPanel( this, "MenuPanel" ) ;
-			MenuPanel.Resize( stage.nativeWindow.width, GUI.SizeMenuItemHeight+2 );			
+			MenuPanel.Resize( stage.stageWidth, GUI.SizeMenuItemHeight+2 );			
 			
 			var mi:CMenuItem = new CMenuItem( MenuPanel, "File" ) ;
 			mi.AddCallback( OnMenu );
@@ -75,35 +81,15 @@ package Designer
 			min.AddSubMenuItem( "Insert Button", OnMenu );
 			min.AddSubMenuItem( "Insert Window", OnMenu );
 			min.AddSubMenuItem( "Insert MenuItem", OnMenu );
+			min.AddSubMenuItem( "Insert StatusBar", OnMenu );
 			
 			var v:CMenuItem = new CMenuItem( MenuPanel, "Debug" ) ;
-			v.AddSubMenuItem("Dump XML", OnMenu );
+			v.AddSubMenuItem("Test", OnMenu );
+			v.AddSubMenuItem("Show XML", OnMenu );
+			v.AddSubMenuItem("Trace XML", OnMenu );
 			
 			RootWidget = new CWidget( this, "Root" );
-		
-			
-			//RootWidget.addEventListener( MouseEvent.MOUSE_DOWN, onRootDown );			
-			//var SaveButton:CButton = new CButton( RootWidget, "Save XML" );
-			//SaveButton.AddCallback( OnSaveXML );			
-			//SaveButton.x = 128;
-			//SaveButton.y = 48;
-			/*
-			var win:CWindow = new CWindow( RootWidget, "MyWindow" );
-			win.AddCallback( ControllerCallback );
-			win.x = 200;
-			win.y = 200;
-			//win.width = 128;			
-			
-			var btn:CButton = new CButton( win.Panel, "Button" );
-			btn.AddCallback( ControllerCallback );
-			win.Panel.addChild( btn );
-			
-			var btn2:CButton = new CButton( win.Panel, "Button 2" );
-			btn2.AddCallback( ControllerCallback );
-			win.Panel.addChild( btn2 );
-			win.Panel.Layout();
-			*/
-			
+			RootWidget.y = GUI.SizeMenuItemHeight;	
 			
 			Properties = new CPropertiesInspector( this, "Properties" ) ;
 			Properties.Caption = "Properties";
@@ -111,15 +97,18 @@ package Designer
 			Properties.x = stage.width-Properties.width - 10;
 			Properties.y = GUI.SizeMenuItemHeight+4;
 			Properties.AddCallback( PropertyCallback );
-			
 			//btn2.y = 48;
 			
-			DesignHandle = new CDesignerHandles2( null, "SCALER", null );
+			DesignHandle = new CDesignerHandles( null, "SCALER", null );
 			DesignHandle.Serialise = false;
-			DesignHandle.addEventListener( CDesignerHandles.CONTROL_RESIZE, onControlResize );
-			
+			DesignHandle.addEventListener( CDesignerHandles.CONTROL_RESIZE, onControlResize );			
 			
 			addChild( MenuPanel ); //add the menu panel again so that it's on top;
+			
+			var sb:CStatusBar = new CStatusBar( this, "Status" );
+			sb.y = (stage.stageHeight - sb.height) - MenuPanel.Bounds.height;
+			//sb.y = 100;
+			addChild( sb );
 			
 			SetupRoot( );
 			
@@ -136,9 +125,9 @@ package Designer
 		
 		protected function SetupRoot( ) : void
 		{	
-			RootWidget.y=0;
+			RootWidget.y=GUI.SizeMenuItemHeight+ 5;
 			RootWidget.LayoutOffset.y = 30;
-			RootWidget.Resize(  stage.nativeWindow.width,  stage.nativeWindow.height );
+			RootWidget.Resize(  stage.stageWidth,  stage.stageHeight );
 			RootWidget.AddCallback( RootCallback );
 			addChild( MenuPanel );
 			addChild( Properties );
@@ -159,6 +148,8 @@ package Designer
 			RootClicked = true;					
 		}
 		
+		
+		
 		public function OnMenu( Widget:CWidget, e:Event ) : void
 		{
 			trace( Widget.name + " : " + e.toString() );
@@ -172,12 +163,7 @@ package Designer
 					ClearGUI();
 				break;
 				case "Delete" :
-					if ( SelectedWidget != null )
-					{
-						SelectedWidget.parent.removeChild( SelectedWidget );
-						SelectedWidget.Dispose( );
-						SelectWidget( null );
-					}
+					DeleteSelected( );					
 				break;
 				case "Copy" :
 					if ( SelectedWidget != null )
@@ -193,7 +179,7 @@ package Designer
 				case "Paste" :
 				{
 					var data:String = Clipboard.generalClipboard.getData( ClipboardFormats.HTML_FORMAT ) as String;					
-					GUI.LoadXMLFromString( data, ParentWidget );
+					GUI.LoadXMLIntoWidget( data, ParentWidget );
 					SetupCallbacks( ParentWidget );
 					//trace( data );
 				}
@@ -203,30 +189,38 @@ package Designer
 					pan.DesignMode = true;
 					pan.AddCallback( DesignerCallback );
 					pan.x = 0;
-					pan.y = 60;
+					pan.y = 0;
+					Baptize( pan );
+					SelectWidget( pan );					
 				break;
 				case "Insert Button" :
 					var But:CButton = new CButton( ParentWidget, "Unnamed" );
 					But.DesignMode = true;
 					But.AddCallback( DesignerCallback );
 					But.x = 0;
-					But.y = 30;
+					But.y = 0;
+					Baptize( But );
+					SelectWidget( But );					
 				break;
 				case "Insert Window":
 					var win:CWindow = new CWindow( ParentWidget, "Unnamed Window" );
 					win.DesignMode = true;
 					win.AddCallback( DesignerCallback );
 					win.x = 0;
-					win.y = 30;
+					win.y = 0;
+					Baptize( win );
+					SelectWidget( win );					
 				break;
 				case "Insert MenuItem":					
 					if ( ParentWidget is CMenuItem )
 					{
 						var sm:CMenuItem = ParentWidget as CMenuItem ;
 						sm.DesignMode = true;
-						sm.AddSubMenuItem( "SubItem", DesignerCallback );
+						var mit:CMenuItem = sm.AddSubMenuItem( "SubItem", DesignerCallback );
 						sm.ShowSubItems(true );
 						sm.AddCallback( DesignerCallback );
+						Baptize( mit );
+						//SelectWidget ( mit );
 					}
 					else
 					{
@@ -234,25 +228,95 @@ package Designer
 						mi.DesignMode = true;
 						mi.AddCallback( DesignerCallback );
 						mi.x = 0;
-						mi.y = 30;
-					}
+						mi.y = 0;
+						Baptize( mi );
+						SelectWidget ( mi );
+					}					
+										
 				break;
-				case "Dump XML":
+				case "Insert StatusBar":
+					var sb:CStatusBar = new CStatusBar( ParentWidget, "Status" );
+					sb.DesignMode = true;s
+					sb.AddCallback( DesignerCallback );
+					Baptize( sb );
+					SelectWidget( sb );
+				break;				
+				case "Trace XML":
 					var s:XML = GUI.ParseToXML( RootWidget, null );
 					trace( s.toXMLString() );
-				break;				
+				break;		
+				case "Show XML":
+					DumpXMLToScreen( );
+				break;
+				case "Test":
+					CreateTestWindow( );
+				break;
 			}
 			
 			ParentWidget.Layout();			
 		}
 		
-		public function SelectWidget( Widget:CWidget ) : void
+		private function Baptize(Widget:CWidget):void
 		{
-			DesignHandle.SetTarget( Widget );
+			WidgetCount++;
+			Widget.name = Widget.Type + WidgetCount;			
+		}
+		
+		private function CreateTestWindow():void
+		{			
+			//gather xml
+			var xml:XML = <xml/>;
+			var s:XML = GUI.ParseToXML( RootWidget, xml );
+			s.widget.y = 0;
+			
+			var nroot:MovieClip = CWindowTools.NewWindow( this );			
+			GUI.LoadXMLIntoWidget( s, nroot );			
+		}
+		
+		private function DumpXMLToScreen() : void
+		{
+			var xml:XML = <xml/>;
+			var s:XML = GUI.ParseToXML( RootWidget, xml );
+			s.widget.y = 0;
+			
+			var nroot:MovieClip = CWindowTools.NewWindow( this );
+			var tf:TextField = new TextField( );
+			tf.type = TextFieldType.INPUT;
+			nroot.addChild( tf );
+			tf.width = nroot.width;
+			tf.height= nroot.height;
+			tf.text = s.toXMLString();
+			nroot.visible = true;
+		}
+		
+		private function DeleteSelected():void
+		{
+			if ( SelectedWidget != null )
+			{
+				SelectedWidget.parent.removeChild( SelectedWidget );
+				if ( SelectedWidget.parent is CWidget ) 
+				{
+					var w:CWidget = SelectedWidget.parent as CWidget;
+					w.Layout();
+				}
+				SelectedWidget.Dispose( );
+				SelectWidget( null );
+				
+			}			
+		}
+		
+		public function SelectWidget( Widget:CWidget ) : void
+		{			
 			if ( Widget == null ) 
 			{
 				if ( RootWidget.contains( DesignHandle ))
 					RootWidget.removeChild( DesignHandle );				
+			}
+			else
+			{
+				RootWidget.addChild( DesignHandle );
+				if ( Widget != RootWidget )
+					DesignHandle.SetTarget( Widget );
 			}
 			Properties.SetTarget( Widget );
 			SelectedWidget = Widget;
@@ -273,7 +337,7 @@ package Designer
 		public function DesignerCallback( Widget:CWidget, e:Event ) : void
 		{
 			trace( Widget.name + " : " + e.toString() );
-			
+			e.stopImmediatePropagation();
 			if (( Widget == RootWidget ) && ( RootClicked==false ))
 			{
 				if ( RootWidget.contains( DesignHandle ))
@@ -326,14 +390,14 @@ package Designer
 			fr.removeEventListener( Event.COMPLETE, onFileComplete );
 			var s:String = event.target.data ;
 			//trace( "load complete " + s );
-			GUI.LoadXMLFromString( s, this );
+			GUI.LoadXMLIntoWidget( s, this );
 			RootWidget = this.getChildByName( "Root" ) as CWidget;
 			SetupRoot( );
 			
 			SetupCallbacks( RootWidget ) ;
 		}
 		
-		//Setup designer callbacks from a loaded file
+		//recursively setup designer callbacks from a loaded file
 		public function SetupCallbacks( parent:CWidget ) : void
 		{
 			for ( var i:int = 0; i< parent.numChildren; i++ )

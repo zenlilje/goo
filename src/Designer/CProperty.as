@@ -3,7 +3,6 @@ package Designer
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
-	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	
 	import Goo.CTextField;
@@ -27,10 +26,11 @@ package Designer
 			NameBox.height = GUI.SizeListItemHeight;
 			NameBox.selectable = false;
 			
-			ValueBox.Resize( ParentWidget.width - NameBox.width, GUI.SizeListItemHeight );
+			ValueBox.Resize( ParentWidget.width - NameBox.width - 4, GUI.SizeListItemHeight-2 );
 			addChild( NameBox );
 			addChild( ValueBox );
-			ValueBox.x = NameBox.width;			
+			ValueBox.x = NameBox.width;
+			ValueBox.y = 1;
 			ValueBox.type = TextFieldType.INPUT;
 			ValueBox.background = true;
 			ValueBox.addEventListener( Event.CHANGE, onChange );
@@ -41,9 +41,9 @@ package Designer
 			graphics.clear( );
 			//graphics.beginFill(GUI.ColorWindow) ;
 			//graphics.drawRect(0,0, Bounds.width, Bounds.height );
-			graphics.lineStyle(1, GUI.ColorBorder );
-			graphics.moveTo( 5, GUI.SizeListItemHeight );
-			graphics.lineTo( width, GUI.SizeListItemHeight );
+			graphics.lineStyle(1, GUI.ColorBorderLight );
+			graphics.moveTo( 0, GUI.SizeListItemHeight );
+			graphics.lineTo( width, GUI.SizeListItemHeight-2 );
 			//graphics.endFill();
 			NameBox.width = 64;
 			ValueBox.width = parent.width - NameBox.width;

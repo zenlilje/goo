@@ -17,10 +17,9 @@ package Goo
 		public function CWindow( ParentWidget:Sprite, sName:String )
 		{	
 			HeaderRect.width = GUI.SizeWindowWidth;
-			HeaderRect.height = GUI.SizeWindowHeaderHeight;
-			
+			HeaderRect.height = GUI.SizeWindowHeaderHeight;			
 			super( ParentWidget, sName, new Rectangle( 0,0, GUI.SizeWindowWidth, GUI.SizeWindowHeight+GUI.SizeWindowHeaderHeight ) );
-			
+			Type = "CWindow";			
 			PublicProperties.push( "Caption" );
 			
 		}

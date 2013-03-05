@@ -19,8 +19,9 @@ package Goo
 		
 		
 		public function CTextField( ParentWidget:Sprite, sName:String)
-		{
+		{			
 			super(ParentWidget, sName);
+			Type = "CTextField";
 		}
 		
 		public function get type():String

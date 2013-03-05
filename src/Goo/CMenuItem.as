@@ -21,8 +21,9 @@ package Goo
 		
 		public function CMenuItem(ParentWidget:Sprite, sName:String)
 		{
-			Label = sName;			
-			super(ParentWidget, sName);			
+			Label = sName;		
+			super(ParentWidget, sName);
+			Type = "CMenuItem";
 			PublicProperties.push( "Label" );
 		}
 		
@@ -76,6 +77,12 @@ package Goo
 			addEventListener( MouseEvent.MOUSE_OUT, onMouseOut );
 		}
 		
+		/**
+		 * Open or close the mouse menu
+		 * In Design Mode hold down CTRL to open or close 
+		 * @param event
+		 * 
+		 */		
 		protected override function onClick(event:MouseEvent):void
 		{
 			//if ( event.currentTarget != this ) return;
@@ -83,32 +90,25 @@ package Goo
 			{			
 				Callback(this, event);
 			}
-		/*	event.stopImmediatePropagation();
 			
-			
-			
-			if (( DesignMode == true ) && (event.ctrlKey == false )) return;
-			
-			if ( parent is CPanel )
+			if ( DesignMode == false )
 			{
-				var pan:CPanel = parent as CPanel;
-				pan.HideSubMenus();
-			}
-			
-			if ( parent is CMenuItem )
-			{
-				var p:CMenuItem = parent as CMenuItem;
-				p.ShowSubItems( false )
-			}*/
-			
-			if ( Open )
-			{
-				ShowSubItems( false );	
+				if ( Open )
+				{
+					ShowSubItems( false );	
+				}
+				else
+				{
+					ShowSubItems( true );			
+				}
 			}
 			else
 			{
-				ShowSubItems( true );			
-			}			
+				if  (event.ctrlKey == true )
+					ShowSubItems( false );
+				else
+					ShowSubItems( true );
+			}
 		}	
 		protected function onMouseOver(event:MouseEvent):void
 		{
@@ -116,6 +116,11 @@ package Goo
 			addChild( Over );
 			addChild( Text );
 			if ( contains( Normal ) ) removeChild( Normal );
+			if ( parent is CMenuItem ) 
+			{
+				var p:CMenuItem = parent as CMenuItem;
+				p.ShowSubItems( true );				
+			}
 		}
 		
 		protected function onMouseOut(event:MouseEvent):void
@@ -123,6 +128,11 @@ package Goo
 			addChild( Normal );
 			addChild( Text );
 			if ( contains( Over ) ) removeChild( Over );
+			if (( parent is CMenuItem ) && ( DesignMode == false )) 
+			{
+				var p:CMenuItem = parent as CMenuItem;
+				p.ShowSubItems( false );					
+			}
 		}
 		
 		public function AddSubMenuItem( sName:String, Callback:Function ) : CMenuItem

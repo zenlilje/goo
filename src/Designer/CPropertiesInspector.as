@@ -44,7 +44,7 @@ package Designer
 			
 			
 			AddProperty("name" );
-			AddPublicProperties( );
+			AddPublicProperties( );			
 			
 			// List the class name.
 			var classInfo:XML = describeType(TargetWidget);

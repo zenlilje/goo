@@ -13,24 +13,27 @@ package Goo
 	
 	public class CPanel extends CWidget
 	{			
-		private var _LayoutStyle:int = GUI.LayoutHorizontal;
+		private var _LayoutStyle:String = GUI.LayoutHorizontal;
 		
 		public function CPanel(ParentWidget:Sprite, sName:String)
-		{
-			Bounds = new Rectangle( 0,0, GUI.SizeWindowWidth, GUI.SizeWindowHeight );
+		{				
+			if ( Bounds == null )
+			{
+				Bounds = new Rectangle( 0,0, GUI.SizeWindowWidth, GUI.SizeMenuItemHeight );
+			}
 			super(ParentWidget, sName);
+			Type = "CPanel";
+			PublicProperties.push( "LayoutStyle" );
 		}
-		
-		
 		
 		//todo smarter heights
 
-		public function get LayoutStyle():int
+		public function get LayoutStyle():String
 		{
 			return _LayoutStyle;
 		}
 
-		public function set LayoutStyle(value:int):void
+		public function set LayoutStyle(value:String):void
 		{
 			_LayoutStyle = value;
 			Layout( );
@@ -102,7 +105,7 @@ package Goo
 			return e;
 		}
 		
-		public function HideSubMenus( ) : void
+		/*public function HideSubMenus( ) : void
 		{
 			for ( var i:uint = 0; i< numChildren; i++ )
 			{
@@ -111,6 +114,6 @@ package Goo
 				if ( w == null ) continue;
 				w.ShowSubItems(false );
 			}
-		}
+		}*/
 	}
 }

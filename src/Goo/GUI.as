@@ -1,13 +1,10 @@
-package Goo
+﻿package Goo
 {
 	import flash.display.GradientType;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
+	import flash.events.Event;		
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
@@ -17,6 +14,7 @@ package Goo
 		
 		//colors
 		public static const ColorBorder:int = 0x0;
+		public static var ColorBorderLight:uint = 0xaaaaaa;
 		public static const ColorButtonOver:int = 0xffffee;
 		public static const ColorWindow:int = 0xeeeeee;
 		public static const ColorWindow2:int = 0xcccccc;
@@ -48,12 +46,13 @@ package Goo
 		public static const SizeHandle:int = 10;
 		
 		//layout
-		public static const LayoutNone:int = 0; //widgets are added in absolute position
-		public static const LayoutAbsolute:int = 0; //widgets are added in absolute position
-		public static const LayoutHorizontal:int = 1; //widgets are added horizontally and then wrapped down
-		public static const LayoutVertical:int = 2; //widgets are added vertically and then wrapped across		
+		public static const LayoutNone:String= "None"; //widgets are added in absolute position
+		public static const LayoutAbsolute:String = "Absolute"; //widgets are added in absolute position
+		public static const LayoutHorizontal:String = "Horizontal"; //widgets are added horizontally and then wrapped down
+		public static const LayoutVertical:String = "Vertical"; //widgets are added vertically and then wrapped across		
 		
 		public static var Indent:int = 0;
+		
 		
 		public function GUI()
 		{
@@ -65,7 +64,7 @@ package Goo
 		 * @param TargetWidget
 		 * 
 		 */		
-		public static function LoadXMLFromString( s:String, TargetWidget:Sprite ) : void
+		public static function LoadXMLIntoWidget( s:String, TargetWidget:Sprite ) : void
 		{
 			var xml:XML = new XML( s );
 			if ( xml == null ) 
@@ -129,7 +128,7 @@ package Goo
 					w = new CButton( Parent, sName );										
 				break;				
 				case "Goo::CMenuItem":
-					w = new CMenuItem( Parent, sName );
+					w = new CMenuItem( Parent, sName );					
 				break;
 			}
 			
@@ -205,18 +204,7 @@ package Goo
 		 */		
 		public static function SaveXML( sFile:String, SourceWidget:CWidget) : void
 		{	
-			var f:File = File.documentsDirectory;
-			f = f.resolvePath( sFile );
-			var fs:FileStream = new FileStream();
-			var sa:Array = new Array( );
-			var root:XML = <xml />;			
-			var s:String = ParseToXML( SourceWidget , root ).toXMLString();
-			//trace( s );
-			sa.push( s );
-			
-			fs.open( f, FileMode.WRITE );
-			fs.writeUTFBytes( sa.join("\n" ) );
-			fs.close( );
+			CFileTools.SaveXML( sFile, SourceWidget ) ;			
 		}
 		
 		/**
