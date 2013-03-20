@@ -23,6 +23,7 @@ package Goo
 		//(flash calculates bounds after drawing)
 		public var Bounds:Rectangle = null;	
 		public var LayoutOffset:Point = new Point( 0,0 );
+		public var TriggerLayout:Boolean = true;
 		
 		public var PublicProperties:Array = new Array( );
 		
@@ -134,7 +135,7 @@ package Goo
 			Bounds.height = theight;
 			Create( );
 			Layout( );
-			if ( parent is CWidget ) 
+			if (( parent is CWidget ) && ( TriggerLayout == true )) 
 			{
 				var w:CWidget = parent as CWidget;
 				w.Layout( );

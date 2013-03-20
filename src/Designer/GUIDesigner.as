@@ -12,11 +12,12 @@
 		
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
-	import flash.display.MovieClip;		
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.net.FileFilter;
 	import flash.net.FileReference;
@@ -24,12 +25,16 @@
 	import flash.text.TextFieldType;
 	
 	import Goo.CButton;
+	import Goo.CLabel;
+	import Goo.CList;
 	import Goo.CMenuItem;
 	import Goo.CPanel;
 	import Goo.CStatusBar;
+	import Goo.CTextField;
 	import Goo.CWidget;
 	import Goo.CWindow;
 	import Goo.GUI;
+	import Goo.Keys;
 	
 	
 	public class GUIDesigner extends Sprite
@@ -77,11 +82,14 @@
 			
 			var min:CMenuItem = new CMenuItem( MenuPanel, "Insert" ) ;
 			min.AddCallback( OnMenu );
-			min.AddSubMenuItem( "Insert Panel", OnMenu );
+			
 			min.AddSubMenuItem( "Insert Button", OnMenu );
-			min.AddSubMenuItem( "Insert Window", OnMenu );
+			min.AddSubMenuItem( "Insert Label", OnMenu );
+			min.AddSubMenuItem( "Insert List", OnMenu );
 			min.AddSubMenuItem( "Insert MenuItem", OnMenu );
+			min.AddSubMenuItem( "Insert Panel", OnMenu );
 			min.AddSubMenuItem( "Insert StatusBar", OnMenu );
+			min.AddSubMenuItem( "Insert Window", OnMenu );
 			
 			var v:CMenuItem = new CMenuItem( MenuPanel, "Debug" ) ;
 			v.AddSubMenuItem("Test", OnMenu );
@@ -106,15 +114,31 @@
 			addChild( MenuPanel ); //add the menu panel again so that it's on top;
 			
 			var sb:CStatusBar = new CStatusBar( this, "Status" );
-			sb.y = (stage.stageHeight - sb.height) - MenuPanel.Bounds.height;
+			sb.y = (stage.stageHeight ) - MenuPanel.Bounds.height;
 			//sb.y = 100;
 			addChild( sb );
 			
 			SetupRoot( );
 			
+			SetupEvents( );
+			
 			//test
 			//GUI.LoadXML( "test.xml", win );
 			//GUI.SaveXML( "test.xml" , win );
+		}
+		
+		private function SetupEvents():void
+		{
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );			
+		}
+		
+		protected function onKeyDown(event:KeyboardEvent):void
+		{
+			trace( event.keyCode );
+			if ( event.keyCode == Keys.KEY_DELETE )
+			{
+				DeleteSelected();	
+			}
 		}
 		
 		private function PropertyCallback( widget:CWidget, e:Event ):void
@@ -147,8 +171,6 @@
 			// TODO Auto-generated method stub
 			RootClicked = true;					
 		}
-		
-		
 		
 		public function OnMenu( Widget:CWidget, e:Event ) : void
 		{
@@ -201,6 +223,20 @@
 					But.y = 0;
 					Baptize( But );
 					SelectWidget( But );					
+				break;
+				case "Insert Label" :
+					var tf:CLabel = new CLabel( ParentWidget, "Unnamed" );
+					tf.DesignMode = true;					
+					tf.AddCallback( DesignerCallback );
+					Baptize( tf );
+					SelectWidget( tf );
+				break;
+				case "Insert List" :
+					var lst:CList = new CList( ParentWidget, "Unnamed" );
+					lst.DesignMode = true;
+					lst.AddCallback( DesignerCallback );
+					Baptize( lst );
+					SelectWidget( lst );
 				break;
 				case "Insert Window":
 					var win:CWindow = new CWindow( ParentWidget, "Unnamed Window" );
@@ -256,6 +292,11 @@
 			ParentWidget.Layout();			
 		}
 		
+		/**
+		 * Gives a unique(ish) name to the widget 
+		 * @param Widget
+		 * 
+		 */		
 		private function Baptize(Widget:CWidget):void
 		{
 			WidgetCount++;

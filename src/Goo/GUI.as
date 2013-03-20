@@ -4,10 +4,11 @@
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
-	import flash.events.Event;		
+	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
+	import flash.text.TextField;
 
 	public class GUI
 	{	
@@ -41,6 +42,13 @@
 		public static const SizeWindowHeight:int = 240;
 		
 		public static const SizeListItemHeight:int = 24;
+		
+		public static var SizeListHeight:int = 100;
+		public static var SizeListWidth:int = 80;
+		
+		//scroll bar button
+		public static var SizeScrollButtonHeight:int = 24;
+		public static var SizeScrollButtonWidth:int = 24;		
 		
 		//dragging handle
 		public static const SizeHandle:int = 10;

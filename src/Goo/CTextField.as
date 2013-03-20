@@ -22,6 +22,7 @@ package Goo
 		{			
 			super(ParentWidget, sName);
 			Type = "CTextField";
+			PublicProperties.push( "text" );	
 		}
 		
 		public function get type():String

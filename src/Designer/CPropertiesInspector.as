@@ -8,6 +8,7 @@ package Designer
 	import flash.utils.describeType;
 	
 	import Goo.CButton;
+	import Goo.CList;
 	import Goo.CTextField;
 	import Goo.CWidget;
 	import Goo.CWindow;
@@ -40,11 +41,11 @@ package Designer
 			
 			ClearProperties( );
 			
-			if ( Widget == null ) return;
-			
+			if ( Widget == null ) return;			
 			
 			AddProperty("name" );
-			AddPublicProperties( );			
+			AddPublicProperties( );		
+			AddSpecialProperties( ) ;
 			
 			// List the class name.
 			var classInfo:XML = describeType(TargetWidget);
@@ -84,6 +85,28 @@ package Designer
 			}
 		}
 		
+		public function AddSpecialProperties( ) : void
+		{
+			if ( TargetWidget.Type == "CList" )
+			{
+				AddButton( AddItem );
+			}
+		}
+		
+		public function AddButton( callback:Function ) : void
+		{
+			var but:CButton = new CButton( this, "Add Item" );
+			but.AddCallback( callback );
+			Properties.push( but );
+		}
+		
+		public function AddItem( Source:CWidget, event:Event ) : void
+		{
+			var tl:CList = TargetWidget as CList;
+			tl.AddItem("Item" );
+			
+		}
+		
 		public override function Resize( twidth:int, theight:int) : void
 		{
 			super.Resize( twidth, theight );
@@ -94,7 +117,7 @@ package Designer
 		{
 			while ( Properties.length>0 )
 			{
-				var w:CProperty = Properties.pop();				
+				var w:CWidget = Properties.pop();				
 				Panel.removeChild( w );
 			}
 		}

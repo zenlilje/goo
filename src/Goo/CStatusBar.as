@@ -21,7 +21,7 @@ package Goo
 			}
 			super(ParentWidget, sName);
 			
-			TextBox = new CTextField( this, "Text" );
+			TextBox = new CTextField( this, "Status Text" );
 			TextBox.text = "Status";
 			TextBox.Resize( Bounds.width, Bounds.height );
 		}

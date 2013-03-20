@@ -22,7 +22,8 @@ package Goo
 		
 		public function CButton(ParentWidget:Sprite, sName:String)
 		{			
-			Bounds = new Rectangle( 0,0, GUI.SizeButtonWidth, GUI.SizeButtonHeight );			
+			Bounds = new Rectangle( 0,0, GUI.SizeButtonWidth, GUI.SizeButtonHeight );
+			_Label = sName;
 			super(ParentWidget, sName);
 			Type = "CButton";
 			PublicProperties.push( "Label" );			
@@ -68,7 +69,7 @@ package Goo
 			Text.width = Bounds.width;
 			Text.height = GUI.SizeButtonHeight;			
 			Text.x = 0;
-			Text.y = (Bounds.height - Text.height)/2;
+			Text.y = ((Bounds.height - Text.height)/2)+2;
 			
 			buttonMode = true;
 		}
